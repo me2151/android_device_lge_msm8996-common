@@ -71,6 +71,8 @@ BOARD_CHARGING_CMDLINE_VALUE := "chargerlogo"
 # Camera
 USE_CAMERA_STUB := true
 USE_DEVICE_SPECIFIC_CAMERA := true
+TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES := true
+BOARD_QTI_CAMERA_32BIT_ONLY := true
 
 # CMHW
 TARGET_GESTURES_NODE := "/sys/devices/virtual/input/lge_touch/tap2wake"
@@ -146,6 +148,8 @@ TARGET_NEEDS_PDFIUM_BIGINT := true
 
 # Power
 TARGET_POWERHAL_VARIANT := qcom
+
+TARGET_HAS_LEGACY_HSR := true
 
 # Properties
 TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
