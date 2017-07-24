@@ -31,7 +31,7 @@ TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := kryo
+TARGET_2ND_CPU_VARIANT := cortex-a53
 
 TARGET_BOARD_PLATFORM := msm8996
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno530
@@ -71,8 +71,6 @@ BOARD_CHARGING_CMDLINE_VALUE := "chargerlogo"
 # Camera
 USE_CAMERA_STUB := true
 USE_DEVICE_SPECIFIC_CAMERA := true
-TARGET_CAMERASERVICE_CLOSES_NATIVE_HANDLES := true
-BOARD_QTI_CAMERA_32BIT_ONLY := true
 
 # CMHW
 TARGET_GESTURES_NODE := "/sys/devices/virtual/input/lge_touch/tap2wake"
@@ -82,17 +80,8 @@ BOARD_USES_QCNE := true
 
 # CPU
 ENABLE_CPUSETS := true
-
-# Pre-optimization
-ifneq ($(filter-out false,$(USE_DEXPREOPT)),)
-  # Enable dex-preoptimization.
-  WITH_DEXPREOPT := true
-  # Disable "--compile-pic" flag.
-  WITH_DEXPREOPT_PIC := false
-else
-  # Disable dex-preoptimization.
-  WITH_DEXPREOPT := false
-endif
+ENABLE_SCHEDBOOST := true
+TARGET_USES_INTERACTION_BOOST := true
 
 # Display
 BOARD_USES_ADRENO := true
@@ -147,9 +136,8 @@ TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_NEEDS_PDFIUM_BIGINT := true
 
 # Power
-TARGET_POWERHAL_VARIANT := qcom
+BOARD_HAL_STATIC_LIBRARIES := libdumpstate.msm8996
 
-TARGET_HAS_LEGACY_HSR := true
 
 # Properties
 TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
@@ -160,6 +148,9 @@ TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab.qcom
 # RIL
 TARGET_RIL_VARIANT := caf
 
+# Qualcomm
+BOARD_USES_QC_TIME_SERVICES := true
+ 
 # SELinux policies
 #BOARD_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy
 
@@ -179,6 +170,18 @@ BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 WIFI_DRIVER_FW_PATH_PARAM   := "/sys/module/bcmdhd/parameters/firmware_path"
 WIFI_DRIVER_FW_PATH_AP      := "/system/etc/firmware/fw_bcmdhd_apsta.bin"
 WIFI_DRIVER_FW_PATH_STA     := "/system/etc/firmware/fw_bcmdhd.bin"
+
+# Enable dex pre-opt to speed up initial boot
+ifeq ($(HOST_OS),linux)
+  ifeq ($(WITH_DEXPREOPT),)
+    WITH_DEXPREOPT := true
+    WITH_DEXPREOPT_PIC := true
+    ifneq ($(TARGET_BUILD_VARIANT),user)
+      # Retain classes.dex in APK's for non-user builds
+      DEX_PREOPT_DEFAULT := nostripping
+    endif
+  endif
+endif
 
 # inherit from the proprietary version
 -include vendor/lge/msm8996-common/BoardConfigVendor.mk
