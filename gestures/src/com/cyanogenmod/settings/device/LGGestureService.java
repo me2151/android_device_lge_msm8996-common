@@ -74,18 +74,9 @@ public class LGGestureService extends Service {
         return null;
     }
 
-    private boolean gesturesEnabled() {
-        return (Settings.Secure.getInt(mContext.getContentResolver(),
-                    Settings.System.GESTURES_ENABLED, 0) != 0);
-	}
-
     private boolean writeLPWG(boolean state) {
-        if (DEBUG) Log.d(TAG, "Writing to lpwg_notify");
-        if (gesturesEnabled()) {
-            return FileUtils.writeLine(LPWG_NOTIFY_SYSFS, (state ? "9 1 1 1 0" : "9 1 0 1 0"));
-        } else {
-            return FileUtils.writeLine(LPWG_NOTIFY_SYSFS, (state ? "9 0 1 1 0" : "9 0 0 1 0"));
-        }
+        if (DEBUG) Log.d(TAG, "Writing to lpwg_notify");            
+		return FileUtils.writeLine(LPWG_NOTIFY_SYSFS, (state ? "9 1 1 1 0" : "9 1 0 1 0"));
     }
 
     private void onDisplayOn() {
