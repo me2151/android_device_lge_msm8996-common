@@ -349,8 +349,5 @@
 	
 	<!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveNotificationLed">false</bool>
-	
-	<!-- DoubleTap2Wake Enabler for AOSPA -->
-	<add-resource type="bool" name="config_isDoubleTapEnabled">1</add-resource>
 
 </resources>
