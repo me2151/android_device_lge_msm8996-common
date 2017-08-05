@@ -157,6 +157,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/sap.conf:system/etc/sap.conf \
     $(LOCAL_PATH)/gps/etc/xtwifi.conf:system/etc/xtwifi.conf
 
+# GestureHandler
+PRODUCT_PACKAGES += \
+	GestureHandler
+
 # IMS
 PRODUCT_PACKAGES += \
     libshims_ims
