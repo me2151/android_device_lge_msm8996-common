@@ -42,6 +42,7 @@ public class LGGestureService extends Service {
 
     private Context mContext;
     private PowerManager mPowerManager;
+	
 
     @Override
     public void onCreate() {
@@ -73,14 +74,14 @@ public class LGGestureService extends Service {
         return null;
     }
 
-    private boolean isDoubleTapEnabled() {
-        return res.getBoolean(
-                com.android.internal.R.bool.config_isDoubleTapEnabled);
-    }
+    private boolean gesturesEnabled() {
+        return (Settings.Secure.getInt(mContext.getContentResolver(),
+                    Settings.System.GESTURES_ENABLED, 0) != 0);
+	}
 
     private boolean writeLPWG(boolean state) {
         if (DEBUG) Log.d(TAG, "Writing to lpwg_notify");
-        if (isDoubleTapEnabled()) {
+        if (gesturesEnabled()) {
             return FileUtils.writeLine(LPWG_NOTIFY_SYSFS, (state ? "9 1 1 1 0" : "9 1 0 1 0"));
         } else {
             return FileUtils.writeLine(LPWG_NOTIFY_SYSFS, (state ? "9 0 1 1 0" : "9 0 0 1 0"));
